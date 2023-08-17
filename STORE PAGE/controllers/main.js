@@ -62,7 +62,7 @@ function display(products) {
           <p class="card-text">${product.desc}</p>
           <div class="mt-4">
             <button class="btnPhone-white">More Info</button>
-            <button data-type="addToCart" id="addCart"class="btnPhone-blue" data-id="${product.id}">Add to Cart</button>
+            <button  id="addCart"class="btnPhone-blue" onclick="addToCart(${product.id})">Add to Cart</button>
           </div>
         </div>
       </div>
@@ -74,62 +74,32 @@ function display(products) {
   productContainer.appendChild(productCard);
 }
 
+//Click Add to Cart
+function addToCart(productId) {
+  const existProduct = carts.findIndex((cartItem) => cartItem.id == productId);
+
+  apiGetProductById(productId)
+    .then((res) => {
+      if (existProduct !== -1) {
+        carts[existProduct].quantity += 1;
+      } else {
+        carts = [...carts, { ...res.data, quantity: 1 }];
+      }
+
+      renderCart();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
 //Hàm DOM
 function dom(selector) {
   return document.querySelector(selector);
 }
 
-//Click Add to Cart
-
-//Lắng nghe sự kiện click vào nút ADD TO CART
-dom("#addCart").addEventListener("click", (evt) => {
-  let id = evt.target.getAttribute("data-id");
-  let elementType = evt.target.getAttribute("data-type");
-
-  if (elementType === "addToCart") {
-    let index = productLists.findIndex((product) => {
-      return product.id === id;
-    });
-
-    cartItem = { ...productLists[index], quantity: 1 };
-
-    if (carts.length === 0) {
-      carts.push(cartItem);
-    } else if (carts.length !== 0) {
-      let cartProductIds = carts.map((product) => {
-        return product.id;
-      });
-
-      for (let i = 0; i < cartProductIds.length; i++) {
-        if (cartProductIds[i] === id) {
-          carts = carts.map((product) => {
-            if (product.id === id) {
-              return { ...product, quantity: product.quantity + 1 };
-            }
-            return product;
-          });
-
-          renderCart();
-          localStorage.setItem("carts", JSON.stringify(carts));
-          return;
-        }
-      }
-
-      carts.push(cartItem);
-    }
-
-    // Hiển thị giỏ hàng ra màn hình và lưu mảng carts vào local storage
-    renderCart();
-    localStorage.setItem("carts", JSON.stringify(carts));
-  }
-});
-
 //hàm renderCart để in giỏ hàng ra màn hình
 function renderCart() {
-  carts = carts.filter((product) => {
-    return product.quantity > 0;
-  });
-
   let html = carts.reduce((result, product) => {
     let price = product.price * product.quantity;
 
@@ -155,6 +125,9 @@ function renderCart() {
     );
   }, "");
 
+  if (!html) {
+  }
+
   //Tính tổng tiền phải trả
   let totalPrice = carts.reduce((total, product) => {
     return total + product.price * product.quantity;
@@ -165,10 +138,19 @@ function renderCart() {
     return total + product.quantity;
   }, 0);
 
+  if (!html) {
+    dom("#tblCart").innerHTML = "Giỏ hàng rỗng";
+    dom("#cartPrice").innerHTML = `Tổng tiền: $${totalPrice}`;
+    dom(".total-quantity").innerHTML = 0;
+    dom("#purchase").disabled = true;
+    return;
+  }
+
   //DOM để hiển thị giỏ hàng ra html
   dom("#tblCart").innerHTML = html;
   dom("#cartPrice").innerHTML = `Tổng tiền: $${totalPrice}`;
   dom(".total-quantity").innerHTML = totalQuantity;
+  dom("#purchase").disabled = false;
 }
 
 //Lắng nghe sự kiện click trong thẻ tbody có id="tblCart"
@@ -176,68 +158,31 @@ dom("#tblCart").addEventListener("click", (evt) => {
   let id = evt.target.getAttribute("data-id");
   let elementType = evt.target.getAttribute("data-type");
 
+  const index = carts.findIndex((cartItem) => cartItem.id == id);
+
   //Khi nhấn vào nút giảm số lượng
   if (elementType === "sub") {
-    //Tạo mảng cartProductIds chỉ chứa Id trong mảng carts
-    let cartProductIds = carts.map((product) => {
-      return product.id;
-    });
-
-    //Duyệt mảng cartProductIds nếu có phần tử trùng với id thì quantity - 1
-    for (let i = 0; i < cartProductIds.length; i++) {
-      if (cartProductIds[i] === id) {
-        carts = carts.map((product) => {
-          if (product.id === id) {
-            return { ...product, quantity: product.quantity - 1 };
-          }
-          return product;
-        });
-      }
+    console.log(carts[index].quantity);
+    if (carts[index].quantity == 1) {
+      carts = carts.filter((cartItem) => cartItem.id != id);
+    } else {
+      carts[index].quantity -= 1;
     }
-
-    // Hiển thị giỏ hàng ra màn hình và lưu mảng carts vào local storage
-    renderCart();
-    localStorage.setItem("carts", JSON.stringify(carts));
   }
 
   //Khi nhấn vào nút tăng số lượng
   if (elementType === "add") {
-    //Tạo mảng cartProductIds chỉ chứa Id trong mảng carts
-    let cartProductIds = carts.map((product) => {
-      return product.id;
-    });
-
-    //Duyệt mảng cartProductIds nếu có phần tử trùng với id thì quantity - 1
-    for (let i = 0; i < cartProductIds.length; i++) {
-      if (cartProductIds[i] === id) {
-        carts = carts.map((product) => {
-          if (product.id === id) {
-            return { ...product, quantity: product.quantity + 1 };
-          }
-          return product;
-        });
-      }
-    }
-
-    // Hiển thị giỏ hàng ra màn hình và lưu mảng carts vào local storage
-    renderCart();
-    localStorage.setItem("carts", JSON.stringify(carts));
+    carts[index].quantity += 1;
   }
 
   //Khi nhấn vào nút bỏ sản phẩm
   if (elementType === "remove") {
-    //Tìm index của sản phẩm có id trên trong mảng carts
-    let index = carts.findIndex((product) => {
-      return product.id === id;
-    });
-
-    //Dùng hàm slice và index vừa tìm dc để xóa phần tử trong mảng carts
-    carts.splice(index, 1);
-
-    // Hiển thị giỏ hàng ra màn hình và lưu mảng carts vào local storage
-    renderCart();
-    localStorage.setItem("carts", JSON.stringify(carts));
+    carts = carts.filter((cartItem) => cartItem.id != id);
   }
+
+  // Hiển thị giỏ hàng ra màn hình và lưu mảng carts vào local storage
+  renderCart();
+  localStorage.setItem("carts", JSON.stringify(carts));
 });
 
 //Lắng nghe sự kiện click vào nút Thanh toán
