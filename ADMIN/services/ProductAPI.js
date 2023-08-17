@@ -1,6 +1,6 @@
 function apiGetProduct(searchValue) {
   return axios({
-    url: `https://64cd86fb0c01d81da3ee2c41.mockapi.io/Products`,
+    url: `https://64ba58b65e0670a501d60705.mockapi.io/Products`,
     method: "GET",
     params: {
       name: searchValue || undefined,
@@ -10,14 +10,14 @@ function apiGetProduct(searchValue) {
 
 function apiGetProductByID(productId) {
   return axios({
-    url: `https://64cd86fb0c01d81da3ee2c41.mockapi.io/Products/${productId}`,
+    url: `https://64ba58b65e0670a501d60705.mockapi.io/Products/${productId}`,
     method: "GET",
   });
 }
 
 function apiCreateProduct(product) {
   return axios({
-    url: "https://64cd86fb0c01d81da3ee2c41.mockapi.io/Products",
+    url: "https://64ba58b65e0670a501d60705.mockapi.io/Products",
     method: "POST",
     data: product,
   });
@@ -25,7 +25,7 @@ function apiCreateProduct(product) {
 
 function apiUpdateProduct(productId, newProduct) {
   return axios({
-    url: `https://64cd86fb0c01d81da3ee2c41.mockapi.io/Products/${productId}`,
+    url: `https://64ba58b65e0670a501d60705.mockapi.io/Products/${productId}`,
     method: "PUT",
     data: newProduct,
   });
@@ -33,7 +33,7 @@ function apiUpdateProduct(productId, newProduct) {
 
 function apiDeleteProduct(productId) {
   return axios({
-    url: `https://64cd86fb0c01d81da3ee2c41.mockapi.io/Products/${productId}`,
+    url: `https://64ba58b65e0670a501d60705.mockapi.io/Products/${productId}`,
     method: "DELETE",
   });
 }
