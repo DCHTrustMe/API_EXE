@@ -1,0 +1,38 @@
+.background-cover{
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.cover{
+    background-image: url("../../image/product-header-bg.jpg");
+    padding: 100px 0 ;
+    @extend .background-cover;
+    
+    
+    @include responsive("medium"){
+        padding: 150px 0;
+    }
+
+    @include responsive("extra-large"){
+        padding: 225px 0;
+    }
+
+    & &__title{
+        @include styleText($color-blue-2,$fs-4,$fw-3)
+    }
+
+    & &__subtitle{
+        @include styleText($color-blue-1,$fs-5,$fw-2);
+        margin-bottom: 30px;
+        
+    }
+
+    & &__description{
+        @include styleText($color-dark-1,$fs-2,$fw-1);
+        margin-bottom: 25px;
+    }
+
+   
+
+}

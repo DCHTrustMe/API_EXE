@@ -1,0 +1,22 @@
+$colors:(
+    "primary":#007bff,
+    "secondary": #6c757d,
+    "success":#28a745,
+);
+
+@each $key, $value in $colors {
+    .bg-#{$key}{
+        background-color: $value;
+    }
+
+    .btn-#{$key}{
+        background-color: $value;
+    }
+
+    .text-#{$key}{
+        color: $value;
+    }
+}
+
+
+

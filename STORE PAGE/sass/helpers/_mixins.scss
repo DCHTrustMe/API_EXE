@@ -1,0 +1,28 @@
+@mixin styleText($color,$fs,$fw){
+    color: $color;
+    font-size: $fs;
+    font-weight: $fw;
+}
+
+@mixin styleButton($background,$color,$border){
+    background-color: $background;
+    color:$color;
+    border: $border;
+}
+
+@mixin responsive($screen){
+    @if(map-has-key($map: $breakpoints, $key:$screen )){
+        //Screen hợp lệ, có trong mảng breakpoint 
+         //Lấy ra giá trị của biến screen trong mảng breakpoint 
+        $width: map-get(
+            $map: $breakpoints, 
+            $key: $screen
+        );
+        
+        @media (min-width:$width){
+            @content;
+        }
+    } @else{
+        @warn "invalid screen"
+    }
+}

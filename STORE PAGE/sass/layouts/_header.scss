@@ -1,0 +1,79 @@
+#header {
+  background-color: $color-white-1;
+  box-shadow: 0 2px 4px $color-white-2;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+
+  .navbar-brand {
+    // font-size: $fs-5;
+    // color: $color-blue-2;
+    @include styleText($color-blue-2, $fs-3, $fw-3);
+  }
+
+  .nav-item {
+    .nav-link {
+      // font-size: $fs-2;
+      // color: $color-blue-1;
+      @include styleText($color-blue-1, $fs-2, $fw-3);
+      padding: 25px;
+
+      &::after {
+        content: "";
+        width: 100%;
+        height: 2px;
+        display: block;
+        background-color: $color-blue-2;
+        transform: scaleX(0);
+        transition: 0.2s;
+      }
+      &:hover {
+        &::after {
+          transform: scaleX(1);
+        }
+      }
+    }
+    //& parent selector
+    //tương đương .nav-item active
+    &.active {
+      .nav-link {
+        color: $color-blue-2;
+        &::after {
+          transform: scaleX(1);
+        }
+      }
+    }
+  }
+}
+.cart .cart-icon {
+  position: fixed;
+  top: 20px;
+  cursor: pointer;
+  transition: all 0.5s;
+  z-index: 10;
+}
+
+.cart .cart-icon:hover {
+  color: #ba382f;
+}
+
+.cart .cart-icon i {
+  font-size: 40px;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.cart .cart-icon span {
+  position: absolute;
+  height: 1.2rem;
+  width: 1.2rem;
+  line-height: 1rem;
+  background: white;
+  color: black;
+  border-radius: 50%;
+  border: 1px solid rgb(88, 87, 87);
+  text-align: center;
+  font-weight: 700;
+  right: 2px;
+  user-select: none;
+}

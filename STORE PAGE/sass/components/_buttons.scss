@@ -1,0 +1,20 @@
+.btnPhone {
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    letter-spacing: 0.03rem;
+    padding: 15px 20px;
+}
+
+.btnPhone-blue{
+    @extend .btnPhone;
+
+    @include styleButton($color-blue-2,$color-white-3,none);
+
+}
+
+.btnPhone-white {
+    @extend .btnPhone;
+    @include styleButton(transparent,$color-blue-2,2px solid $color-blue-2)
+
+}
